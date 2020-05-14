@@ -5,9 +5,9 @@ import Logo from "../../Logo/Logo"
 import Backdrop from "../../UI/Backrop/Backdrop"
 
 const sideDrawer = (props) => {
-  const attachedClasses = [classes.SideDrawer, classes.Close]
+  let attachedClasses = [classes.SideDrawer, classes.Close]
   if (props.open) {
-    attachedClasses[1] = classes.Open
+    attachedClasses = [classes.SideDrawer, classes.Open]
   }
 
   return (
