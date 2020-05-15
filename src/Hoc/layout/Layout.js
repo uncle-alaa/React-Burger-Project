@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar"
 import classes from "./Layout.module.css"
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer"
+import { withRouter } from "react-router-dom"
 
 class Layout extends Component {
   state = {
@@ -15,10 +16,16 @@ class Layout extends Component {
       return { showSideDrawer: !prevState.showSideDrawer }
     })
   }
+  logoClickHandler = () => {
+    this.props.history.replace("/")
+  }
   render() {
     return (
       <React.Fragment>
-        <Toolbar click={this.sideDrawerOpenHandler}></Toolbar>
+        <Toolbar
+          click={this.sideDrawerOpenHandler}
+          logoClick={this.logoClickHandler}
+        ></Toolbar>
         <SideDrawer
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler}
@@ -29,4 +36,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout
+export default withRouter(Layout)

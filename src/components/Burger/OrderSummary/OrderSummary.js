@@ -2,8 +2,6 @@ import React, { Component } from "react"
 import Button from "../../UI/Button/Button"
 
 class OrderSummary extends Component {
-  //WARNING! To be deprecated in React v17. Use componentDidUpdate instead.
-
   render() {
     const ingredientSummary = Object.keys(this.props.ingredients).map(
       (igKey) => {

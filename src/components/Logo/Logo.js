@@ -4,7 +4,7 @@ import burgerLogo from "../../assets/images/burger-logo.png"
 
 const logo = (props) => (
   <div className={classes.Logo}>
-    <img src={burgerLogo} alt="myBurger" />
+    <img onClick={props.click} src={burgerLogo} alt="myBurger" />
   </div>
 )
 
