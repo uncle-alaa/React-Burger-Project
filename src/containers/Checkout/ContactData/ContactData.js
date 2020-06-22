@@ -108,41 +108,65 @@ class ContactData extends Component {
       ingredients: this.props.ings,
       price: this.props.price,
       orderData: formData,
+      userId: this.props.userId,
     }
 
-    this.props.onOrderBurger(order)
+    this.props.onOrderBurger(order, this.props.token)
   }
 
   checkValidity(value, rules) {
     let isValid = true
+    if (!rules) {
+      return true
+    }
 
     if (rules.required) {
       isValid = value.trim() !== "" && isValid
     }
+
     if (rules.minLength) {
       isValid = value.length >= rules.minLength && isValid
     }
+
     if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid
     }
+
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      isValid = pattern.test(value) && isValid
+    }
+
+    if (rules.isNumeric) {
+      const pattern = /^\d+$/
+      isValid = pattern.test(value) && isValid
+    }
+
     return isValid
   }
-  inputChangedHandler = (event, inputIdentifier) => {
-    let element = { ...this.state.orderForm }
 
-    element[inputIdentifier].value = event.target.value
-    element[inputIdentifier].touched = true
-    element[inputIdentifier].valid = this.checkValidity(
-      element[inputIdentifier].value,
-      element[inputIdentifier].validation
+  inputChangedHandler = (event, inputIdentifier) => {
+    const updatedOrderForm = {
+      ...this.state.orderForm,
+    }
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier],
+    }
+    updatedFormElement.value = event.target.value
+    updatedFormElement.valid = this.checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validation
     )
+    updatedFormElement.touched = true
+    updatedOrderForm[inputIdentifier] = updatedFormElement
 
     let formIsValid = true
-    for (let inputIdentifiers in element) {
-      formIsValid = element[inputIdentifiers].valid && formIsValid
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid
     }
-    this.setState({ orderForm: element, formIsValid })
+    this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid })
   }
+
   render() {
     const formElementArray = []
     for (let key in this.state.orderForm) {
@@ -186,12 +210,15 @@ const mapStateToProps = (state) => {
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
+    token: state.auth.token,
+    userId: state.auth.userId,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+    onOrderBurger: (orderData, token) =>
+      dispatch(actions.purchaseBurger(orderData, token)),
   }
 }
 

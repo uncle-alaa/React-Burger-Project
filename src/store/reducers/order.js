@@ -1,6 +1,5 @@
 import * as actionTypes from "../actions/actionTypes"
 import { updateObject } from "../utility"
-import { purchaseBurgerStart, fetchOrdersStart } from "../actions/order"
 
 const initialState = {
   orders: [],

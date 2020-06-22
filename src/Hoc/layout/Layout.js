@@ -3,6 +3,7 @@ import Toolbar from "../../components/Navigation/Toolbar/Toolbar"
 import classes from "./Layout.module.css"
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer"
 import { withRouter } from "react-router-dom"
+import { connect } from "react-redux"
 
 class Layout extends Component {
   state = {
@@ -20,13 +21,16 @@ class Layout extends Component {
     this.props.history.replace("/")
   }
   render() {
+    console.log(this.props.isAuthenticated)
     return (
       <React.Fragment>
         <Toolbar
+          isAuth={this.props.isAuthenticated}
           click={this.sideDrawerOpenHandler}
           logoClick={this.logoClickHandler}
         ></Toolbar>
         <SideDrawer
+          isAuth={this.props.isAuthenticated}
           open={this.state.showSideDrawer}
           closed={this.sideDrawerClosedHandler}
         ></SideDrawer>
@@ -36,4 +40,10 @@ class Layout extends Component {
   }
 }
 
-export default withRouter(Layout)
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.token !== null,
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(Layout))
