@@ -1,43 +1,38 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import Toolbar from "../../components/Navigation/Toolbar/Toolbar"
 import classes from "./Layout.module.css"
 import SideDrawer from "../../components/Navigation/SideDrawer/SideDrawer"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 
-class Layout extends Component {
-  state = {
-    showSideDrawer: false,
+const Layout = (props) => {
+  const [sideDrawerIsVisible, setSideDrawerIsVisible] = useState(false)
+
+  const sideDrawerClosedHandler = () => {
+    setSideDrawerIsVisible(false)
   }
-  sideDrawerClosedHandler = () => {
-    this.setState({ showSideDrawer: false })
+  const sideDrawerOpenHandler = () => {
+    setSideDrawerIsVisible(!sideDrawerIsVisible)
   }
-  sideDrawerOpenHandler = () => {
-    this.setState((prevState) => {
-      return { showSideDrawer: !prevState.showSideDrawer }
-    })
+  const logoClickHandler = () => {
+    props.history.replace("/")
   }
-  logoClickHandler = () => {
-    this.props.history.replace("/")
-  }
-  render() {
-    console.log(this.props.isAuthenticated)
-    return (
-      <React.Fragment>
-        <Toolbar
-          isAuth={this.props.isAuthenticated}
-          click={this.sideDrawerOpenHandler}
-          logoClick={this.logoClickHandler}
-        ></Toolbar>
-        <SideDrawer
-          isAuth={this.props.isAuthenticated}
-          open={this.state.showSideDrawer}
-          closed={this.sideDrawerClosedHandler}
-        ></SideDrawer>
-        <main className={classes.Content}>{this.props.children}</main>
-      </React.Fragment>
-    )
-  }
+
+  return (
+    <React.Fragment>
+      <Toolbar
+        isAuth={props.isAuthenticated}
+        click={sideDrawerOpenHandler}
+        logoClick={logoClickHandler}
+      ></Toolbar>
+      <SideDrawer
+        isAuth={props.isAuthenticated}
+        open={sideDrawerIsVisible}
+        closed={sideDrawerClosedHandler}
+      ></SideDrawer>
+      <main className={classes.Content}>{props.children}</main>
+    </React.Fragment>
+  )
 }
 
 const mapStateToProps = (state) => {
